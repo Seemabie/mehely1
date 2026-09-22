@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Baby Janu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#FBF3EE;
+    --bg-2:#F6E7DE;
+    --surface:#FFFFFF;
+    --surface-2:#FDF2EC;
+    --ink:#43303A;
+    --ink-soft:#6A5560;
+    --muted:#9E8892;
+    --line:#EEDCD4;
+    --rose:#DE8E96;
+    --rose-deep:#B85C6B;
+    --gold:#C39A4F;
+    --gold-soft:#E6C888;
+    --blush:#F6DAD3;
+    --shadow:0 30px 70px -34px rgba(120,70,70,.45);
+    --shadow-soft:0 14px 40px -24px rgba(120,70,70,.40);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#221820;
+      --bg-2:#2C1F28;
+      --surface:#2C1F27;
+      --surface-2:#33232D;
+      --ink:#F6E8E4;
+      --ink-soft:#D8C4C9;
+      --muted:#BBA1A9;
+      --line:#3C2A34;
+      --rose:#E8A6AC;
+      --rose-deep:#EE93A0;
+      --gold:#DDBC77;
+      --gold-soft:#F0D9A6;
+      --blush:#3E2933;
+      --shadow:0 34px 80px -34px rgba(0,0,0,.7);
+      --shadow-soft:0 16px 44px -24px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#221820;
+    --bg-2:#2C1F28;
+    --surface:#2C1F27;
+    --surface-2:#33232D;
+    --ink:#F6E8E4;
+    --ink-soft:#D8C4C9;
+    --muted:#BBA1A9;
+    --line:#3C2A34;
+    --rose:#E8A6AC;
+    --rose-deep:#EE93A0;
+    --gold:#DDBC77;
+    --gold-soft:#F0D9A6;
+    --blush:#3E2933;
+    --shadow:0 34px 80px -34px rgba(0,0,0,.7);
+    --shadow-soft:0 16px 44px -24px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Manrope",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  img{max-width:100%}
+  [hidden]{display:none!important}
+
+  #glow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+  .wrap{position:relative;z-index:3;max-width:760px;margin:0 auto;padding-inline:24px;}
+
+  .eyebrow{
+    font-family:"Manrope",sans-serif;font-size:.72rem;letter-spacing:.34em;text-transform:uppercase;
+    font-weight:700;color:var(--gold);margin:0;
+  }
+  h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;margin:0;text-wrap:balance;font-weight:500;}
+
+  /* divider */
+  .rule{display:flex;align-items:center;justify-content:center;gap:16px;margin:30px auto;max-width:280px;}
+  .rule .ln{height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--gold));}
+  .rule .ln.r{background:linear-gradient(90deg,var(--gold),transparent);}
+  .rule svg{width:16px;height:16px;color:var(--rose-deep);flex:0 0 auto;}
+
+  /* ---------- HERO ---------- */
+  .hero{text-align:center;padding-block:96px 40px;position:relative;}
+  .hero .eyebrow{margin-bottom:22px;}
+  .hero h1{
+    font-size:clamp(3rem,11vw,5.6rem);line-height:1.02;letter-spacing:.005em;
+    color:var(--ink);
+  }
+  .hero h1 em{font-style:italic;color:var(--rose-deep);
+    background:linear-gradient(90deg,var(--rose-deep),var(--gold),var(--rose-deep));
+    background-size:220% auto;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:shimmer 7s ease-in-out infinite;}
+  @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .hero .lead{
+    max-width:32ch;margin:26px auto 0;font-size:1.16rem;color:var(--ink-soft);
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+    font-size:1.5rem;line-height:1.5;
+  }
+  .tap-hint{margin-top:22px;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+
+  /* ---------- NOTE ---------- */
+  section.block{padding-block:44px;}
+  .kicker{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;font-weight:700;color:var(--gold);text-align:center;margin-bottom:14px;}
+  h2.title{font-size:clamp(1.9rem,6vw,2.9rem);color:var(--ink);text-align:center;line-height:1.1;}
+
+  .note{
+    margin-top:30px;background:var(--surface);border:1px solid var(--line);
+    border-radius:26px;padding:clamp(28px,6vw,52px);box-shadow:var(--shadow-soft);
+    position:relative;
+  }
+  .note::before{
+    content:"";position:absolute;inset:10px;border:1px solid var(--line);border-radius:18px;
+    pointer-events:none;opacity:.6;
+  }
+  .note p{position:relative;font-size:1.12rem;color:var(--ink-soft);margin:0 0 18px;}
+  .note p:last-child{margin-bottom:0;}
+  .note .dc::first-letter{
+    font-family:"Cormorant Garamond",serif;font-weight:600;font-size:3.4rem;line-height:.8;
+    float:left;padding:6px 12px 0 0;color:var(--rose-deep);
+  }
+  .note .urdu{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.28rem;color:var(--rose-deep);}
+  .note .signrow{margin-top:26px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.35rem;color:var(--ink);}
+
+  /* ---------- CARDS ---------- */
+  .sub-note{text-align:center;color:var(--muted);font-size:.9rem;margin-top:6px;letter-spacing:.02em;
+    font-variant-numeric:tabular-nums;transition:color .3s ease;}
+  .cards{margin-top:24px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+  .rcard{
+    position:relative;background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    padding:22px 46px 22px 22px;box-shadow:var(--shadow-soft);display:flex;gap:16px;align-items:flex-start;
+    text-align:left;font-family:inherit;cursor:pointer;width:100%;
+    transition:transform .22s ease, box-shadow .22s ease, border-color .3s ease, background .3s ease;
+  }
+  .rcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+  .rcard:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
+  .rcard .ic{
+    flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;
+    background:radial-gradient(circle at 40% 35%,var(--blush),color-mix(in srgb,var(--gold-soft) 45%,transparent));
+    border:1px solid var(--line);
+  }
+  .rtext{display:flex;flex-direction:column;}
+  .rh{font-family:"Manrope",sans-serif;font-weight:700;font-size:1.02rem;color:var(--ink);margin-bottom:5px;}
+  .rp{font-size:.96rem;color:var(--muted);line-height:1.55;}
+  .check{
+    position:absolute;top:14px;right:14px;width:24px;height:24px;border-radius:50%;
+    border:1.5px solid var(--line);display:grid;place-items:center;color:transparent;font-size:.8rem;font-weight:800;
+    transition:all .3s cubic-bezier(.2,.9,.3,1.2);transform:scale(.9);
+  }
+  .rcard[aria-pressed="true"]{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));
+    background:linear-gradient(160deg,color-mix(in srgb,var(--blush) 45%,transparent),transparent),var(--surface);}
+  .rcard[aria-pressed="true"] .check{background:var(--gold);border-color:var(--gold);color:#3a2a16;transform:scale(1);}
+  .care-done{text-align:center;margin-top:24px;font-family:"Cormorant Garamond",serif;font-style:italic;
+    font-size:clamp(1.4rem,4.4vw,1.7rem);color:var(--rose-deep);}
+
+  /* ---------- QUOTE (joke) ---------- */
+  .quote{
+    margin-top:20px;text-align:center;background:
+      linear-gradient(160deg,color-mix(in srgb,var(--blush) 60%,transparent),transparent),var(--surface-2);
+    border:1px solid var(--line);border-radius:26px;padding:clamp(32px,6vw,54px);box-shadow:var(--shadow-soft);
+  }
+  .quote .mark{font-family:"Cormorant Garamond",serif;font-size:3.4rem;line-height:0;color:var(--gold);display:block;height:26px;}
+  .quote p{font-family:"Cormorant Garamond",serif;font-size:clamp(1.4rem,4.4vw,2rem);font-style:italic;
+    color:var(--ink);margin:18px auto 0;max-width:24ch;line-height:1.34;font-weight:500;}
+  .quote .whisper{font-family:"Manrope",sans-serif;font-style:normal;font-size:.92rem;color:var(--muted);
+    margin-top:20px;letter-spacing:.02em;}
+
+  /* soon */
+  .soon{text-align:center;}
+  .soon p{max-width:40ch;margin:22px auto 0;font-size:1.14rem;color:var(--ink-soft);
+    font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-style:italic;line-height:1.5;}
+  .falls{width:min(220px,72%);height:auto;margin:24px auto 0;display:block;}
+  .falls g path{stroke-dasharray:5 9;animation:flow 1.5s linear infinite;}
+  @keyframes flow{to{stroke-dashoffset:-14;}}
+  .soft-line{max-width:36ch;margin:0 auto;text-align:center;font-family:"Cormorant Garamond",serif;
+    font-style:italic;font-size:clamp(1.3rem,4vw,1.62rem);line-height:1.5;color:var(--ink-soft);}
+  .soft-line .u{color:var(--rose-deep);}
+
+  /* ---------- FINALE / HEART ---------- */
+  .finale{text-align:center;padding-block:56px 40px;}
+  .finale-h{font-size:clamp(2rem,6.5vw,3rem);color:var(--ink);}
+  .finale-sub{color:var(--muted);margin-top:10px;font-size:.95rem;letter-spacing:.02em;}
+  .heart-btn{
+    margin:26px auto 0;display:block;width:150px;height:auto;border:0;background:none;cursor:pointer;
+    padding:8px;position:relative;-webkit-tap-highlight-color:transparent;touch-action:none;
+  }
+  .heart-btn svg{width:130px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 12px 26px rgba(184,92,107,.34));}
+  .heart-hint{
+    display:block;margin-top:12px;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+    font-weight:700;color:var(--gold);
+  }
+  .heart-btn:focus-visible{outline:3px solid var(--gold);outline-offset:6px;border-radius:16px;}
+  .finale-msg{
+    margin:24px auto 0;max-width:26ch;font-family:"Cormorant Garamond",serif;font-style:italic;
+    font-size:1.5rem;line-height:1.4;color:var(--rose-deep);
+  }
+  .signoff{margin-top:40px;color:var(--muted);font-size:1rem;line-height:1.7;}
+  .signoff .sig{display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.7rem;color:var(--ink);margin-top:2px;}
+  footer{padding-block:26px 52px;text-align:center;color:var(--muted);font-size:.8rem;letter-spacing:.04em;}
+
+  /* ---------- WELCOME GATE ---------- */
+  #gate{
+    position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;
+    background:radial-gradient(135% 90% at 50% 8%,var(--bg-2),var(--bg) 62%);
+    transition:opacity .9s ease, visibility .9s ease;
+  }
+  #gate.gone{opacity:0;visibility:hidden;pointer-events:none;}
+  .gate-inner{max-width:30ch;}
+  .gate-orb{
+    width:70px;height:70px;border-radius:50%;margin:0 auto 30px;
+    background:radial-gradient(circle at 40% 36%,var(--gold-soft),var(--rose) 70%,var(--rose-deep) 130%);
+    box-shadow:0 0 0 10px color-mix(in srgb,var(--rose) 16%,transparent),0 0 56px -4px var(--rose);
+    animation:breathe 5s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+  .gate-eyebrow{font-size:.72rem;letter-spacing:.34em;text-transform:uppercase;font-weight:700;color:var(--gold);}
+  .gate-h{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(2.4rem,9vw,3.6rem);
+    line-height:1.05;color:var(--ink);margin:16px 0 0;}
+  .gate-h em{font-style:italic;color:var(--rose-deep);}
+  .gate-p{color:var(--ink-soft);margin:18px auto 0;font-size:1.05rem;max-width:26ch;}
+  .enterbtn{
+    margin-top:30px;font-family:"Manrope",sans-serif;font-weight:700;font-size:.86rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink);background:transparent;border:1.5px solid var(--gold);
+    border-radius:999px;padding:15px 34px;cursor:pointer;transition:all .3s ease;
+  }
+  .enterbtn:hover{background:var(--gold);color:#3a2a16;transform:translateY(-2px);box-shadow:var(--shadow-soft);}
+  .enterbtn:focus-visible{outline:3px solid var(--gold);outline-offset:4px;}
+  .gate-note{margin-top:18px;font-size:.78rem;color:var(--muted);letter-spacing:.03em;}
+
+  /* ---------- MUSIC TOGGLE ---------- */
+  .audiobtn{
+    position:fixed;right:20px;bottom:20px;z-index:40;width:50px;height:50px;border-radius:50%;
+    border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow-soft);cursor:pointer;
+    display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:15px 0;
+  }
+  .audiobtn:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
+  .audiobtn i{width:3.5px;height:8px;border-radius:2px;background:var(--rose-deep);animation:eq 1s ease-in-out infinite;}
+  .audiobtn i:nth-child(2){animation-delay:.22s}
+  .audiobtn i:nth-child(3){animation-delay:.44s}
+  @keyframes eq{0%,100%{height:6px}50%{height:17px}}
+  .audiobtn[aria-pressed="false"] i{animation-play-state:paused;height:7px;opacity:.5;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .gate-orb,.audiobtn i,.hero h1 em,.falls g path{animation:none!important;}
+    #gate,.enterbtn,.rcard,.check{transition:none;}
+  }
+  @media (max-width:560px){
+    .hero{padding-block:70px 32px;}
+  }
+</style>
+</head>
+<body>
+
+<audio id="bg" src="Interlude.mp3" loop preload="auto"></audio>
+
+<div id="gate" role="dialog" aria-label="A little welcome">
+  <div class="gate-inner">
+    <div class="gate-orb" aria-hidden="true"></div>
+    <p class="gate-eyebrow">for baby janu</p>
+    <h1 class="gate-h">Made with love,<br>while you <em>rest</em></h1>
+    <p class="gate-p">Come in slowly. There is no rush, my love. Just like getting better.</p>
+    <button id="enter" class="enterbtn">Enter softly</button>
+    <p class="gate-note">a little music is waiting</p>
+  </div>
+</div>
+
+<button id="audiobtn" class="audiobtn" hidden aria-label="Pause music" aria-pressed="true">
+  <i></i><i></i><i></i>
+</button>
+
+<canvas id="glow" aria-hidden="true"></canvas>
+
+<main class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">get well soon</p>
+    <h1>Rest now,<br><em>Baby Janu</em></h1>
+    <div class="rule" aria-hidden="true">
+      <span class="ln"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5.3-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.7-8 11-8 11z"/></svg>
+      <span class="ln r"></span>
+    </div>
+    <p class="lead">I am here with you. Don't worry. Ek dum ache se theek ho jao gi, dekhna.</p>
+    <p class="tap-hint" aria-hidden="true">&#10022; tap anywhere and the page will sparkle</p>
+  </header>
+
+  <section class="block soon">
+    <p class="kicker">proud of you</p>
+    <h2 class="title">You still showed up</h2>
+    <p>Sick, tired, not your best, and you still got yourself to the office today. Not many people can do that. I see how hard you push, and it makes me really proud of you. Just promise you will take it easy the moment you can.</p>
+  </section>
+
+  <section class="block">
+    <p class="kicker">a note for you</p>
+    <h2 class="title">Just a few soft words</h2>
+    <div class="note">
+      <p class="dc">Baby Janu, today your body is asking you to slow down, so please let it. Let the water, the medicine, and a little sleep do their quiet work. You do not have to be strong today, or busy, or anything at all.</p>
+      <p>Your only job now is to let me carry the worrying for once. That part is mine today. You are the best company I know, and I cannot wait to see that smile of yours back at full brightness.</p>
+      <p>And no wandering out in the rain on your own, okay? When I am around, keeping you safe is my job. Warm soup in your hands, fish passed from my plate to yours, your medicine on time. Looking after you is one of my favourite things.</p>
+      <p>Until then, I am right here. <span class="urdu">Piyara sa baby, get well soon.</span></p>
+      <p class="signrow">Yours, Seemab</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <p class="kicker">while you rest</p>
+    <h2 class="title">Four small things</h2>
+    <p class="sub-note" id="careProg">tap each one as you do it</p>
+    <div class="cards" id="careCards">
+      <button type="button" class="rcard" aria-pressed="false">
+        <span class="ic" aria-hidden="true">💧</span>
+        <span class="rtext"><span class="rh">Drink your water</span><span class="rp">Keep drinking water, please. Yes, I am going to keep saying it.</span></span>
+        <span class="check" aria-hidden="true">✓</span>
+      </button>
+      <button type="button" class="rcard" aria-pressed="false">
+        <span class="ic" aria-hidden="true">💊</span>
+        <span class="rtext"><span class="rh">Take your medicine</span><span class="rp">One on time, not only the one from this morning. Set a little reminder.</span></span>
+        <span class="check" aria-hidden="true">✓</span>
+      </button>
+      <button type="button" class="rcard" aria-pressed="false">
+        <span class="ic" aria-hidden="true">🛏️</span>
+        <span class="rtext"><span class="rh">Sleep it off</span><span class="rp">The moment you are home, close your eyes. The world can wait.</span></span>
+        <span class="check" aria-hidden="true">✓</span>
+      </button>
+      <button type="button" class="rcard" aria-pressed="false">
+        <span class="ic" aria-hidden="true">🤍</span>
+        <span class="rtext"><span class="rh">Let me worry</span><span class="rp">That is my job today. You just focus on feeling a little better.</span></span>
+        <span class="check" aria-hidden="true">✓</span>
+      </button>
+    </div>
+    <p class="care-done" id="careDone" hidden>All four, done. Good girl. So proud of you.</p>
+  </section>
+
+  <section class="block">
+    <div class="quote">
+      <span class="mark" aria-hidden="true">&ldquo;</span>
+      <p>You said I was looking good, even tired. Here is my secret, my love. Everything looks good when the company is good, and baby, good company matters.</p>
+      <p class="whisper">(And for the record, I really do love your company.)</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="rule" aria-hidden="true">
+      <span class="ln"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5.3-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.7-8 11-8 11z"/></svg>
+      <span class="ln r"></span>
+    </div>
+    <p class="soft-line">Even when you are cross with me, you look cute, you know that? And still, every single time I see you, <span class="u">dil dharak jata hai.</span> <span class="u">Ap hamain waisi hi itni achi lagti hain,</span> exactly as you are.</p>
+  </section>
+
+  <section class="block soon">
+    <p class="kicker">one more reason</p>
+    <h2 class="title">Niagara is waiting</h2>
+    <svg viewBox="0 0 220 130" class="falls" role="img" aria-hidden="true">
+      <path d="M10 34 Q58 26 96 32" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M126 30 Q170 24 210 34" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/>
+      <g stroke="var(--gold-soft)" stroke-width="2" stroke-linecap="round" fill="none" opacity=".9">
+        <path d="M24 36 q-3 30 0 58"/><path d="M40 36 q3 32 0 60"/><path d="M56 36 q-3 30 0 58"/>
+        <path d="M72 36 q3 30 0 56"/><path d="M88 36 q-2 30 0 58"/>
+        <path d="M150 34 q3 32 0 60"/><path d="M166 34 q-3 30 0 58"/>
+        <path d="M182 34 q3 30 0 56"/><path d="M198 34 q-2 30 0 58"/>
+      </g>
+      <g fill="var(--rose)" opacity=".5">
+        <circle cx="55" cy="104" r="4"/><circle cx="70" cy="110" r="5"/><circle cx="40" cy="110" r="4"/>
+        <circle cx="170" cy="104" r="4"/><circle cx="185" cy="110" r="5"/><circle cx="156" cy="110" r="4"/>
+        <circle cx="112" cy="115" r="4"/>
+      </g>
+      <path d="M20 118 Q112 109 205 118" fill="none" stroke="var(--rose)" stroke-width="2" opacity=".5" stroke-linecap="round"/>
+    </svg>
+    <p>Get properly well, Baby Janu, because you and I have a date with Niagara Falls. I want you strong enough to feel the mist on your face and hear it roar. And soon you will be back to yourself, laughing a little too loud, lighting up every room you walk into. That smile is only resting, not gone. Ek dum theek ho jao gi, dekhna.</p>
+  </section>
+
+  <section class="finale">
+    <p class="eyebrow" style="text-align:center">for you</p>
+    <h2 class="finale-h" style="margin-top:14px">Here, take this</h2>
+    <p class="finale-sub">press and hold the heart, and let it fill</p>
+    <button id="heartBtn" class="heart-btn" aria-label="Press and hold to send warmth">
+      <svg viewBox="0 0 100 92" role="img">
+        <defs>
+          <clipPath id="hc"><path d="M50 86 C 20 64, 2 44, 2 24 C 2 10, 13 2, 26 2 C 37 2, 45 9, 50 18 C 55 9, 63 2, 74 2 C 87 2, 98 10, 98 24 C 98 44, 80 64, 50 86 Z"/></clipPath>
+          <linearGradient id="hg" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="var(--rose-deep)"/>
+            <stop offset="1" stop-color="var(--gold)"/>
+          </linearGradient>
+        </defs>
+        <g clip-path="url(#hc)">
+          <rect x="0" y="0" width="100" height="92" fill="var(--blush)"/>
+          <rect id="hfill" x="0" y="92" width="100" height="0" fill="url(#hg)"/>
+        </g>
+        <path d="M50 86 C 20 64, 2 44, 2 24 C 2 10, 13 2, 26 2 C 37 2, 45 9, 50 18 C 55 9, 63 2, 74 2 C 87 2, 98 10, 98 24 C 98 44, 80 64, 50 86 Z" fill="none" stroke="var(--gold)" stroke-width="2.5"/>
+      </svg>
+      <span class="heart-hint" id="heartHint">hold</span>
+    </button>
+    <p class="finale-msg" id="finaleMsg" hidden>All my warmth, sent straight to you. Feel better soon, Baby Janu.</p>
+    <p class="signoff">Now go easy on yourself<span class="sig">Seemab</span></p>
+  </section>
+
+  <footer>made with love, and a little worry</footer>
+</main>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- ambient glow ---------- */
+  var canvas=document.getElementById("glow"), ctx=canvas.getContext("2d");
+  var W,H,dpr,motes=[];
+  var TINT=[[230,201,138],[222,142,150],[246,218,211]];
+  function resize(){dpr=Math.min(window.devicePixelRatio||1,2);W=canvas.clientWidth;H=canvas.clientHeight;
+    canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  window.addEventListener("resize",resize);
+
+  function Mote(x,y,burst){
+    this.x=x;this.y=y;this.r=6+Math.random()*16;
+    this.t=TINT[(Math.random()*TINT.length)|0];
+    this.a=0;this.amax=0.10+Math.random()*0.18;this.ph=Math.random()*6.28;
+    if(burst){var ang=Math.random()*6.28,sp=1.4+Math.random()*4.2;
+      this.vx=Math.cos(ang)*sp;this.vy=Math.sin(ang)*sp;this.r=4+Math.random()*9;
+      this.amax=0.22+Math.random()*0.3;this.decay=0.012+Math.random()*0.01;this.b=true;}
+    else{this.vx=(Math.random()-.5)*0.16;this.vy=-(0.12+Math.random()*0.32);this.decay=0;this.b=false;}
+  }
+  Mote.prototype.step=function(){
+    this.ph+=0.02;this.x+=this.vx+Math.sin(this.ph)*0.2;this.y+=this.vy;
+    if(this.b){this.vx*=0.96;this.vy=this.vy*0.96+0.02;this.amax-=this.decay;if(this.amax<0)this.amax=0;}
+    else{if(this.a<this.amax)this.a+=0.004;if(this.y<-30){this.y=H+20;this.x=Math.random()*W;}}
+    if(!this.b){this.a=this.amax;}
+    else{this.a=this.amax;}
+  };
+  Mote.prototype.draw=function(){
+    var g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+    g.addColorStop(0,"rgba("+this.t[0]+","+this.t[1]+","+this.t[2]+","+this.a+")");
+    g.addColorStop(1,"rgba("+this.t[0]+","+this.t[1]+","+this.t[2]+",0)");
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,6.2832);ctx.fill();
+  };
+  function seed(){motes=[];var n=reduce?10:Math.round(Math.min(W,760)/26);
+    for(var i=0;i<n;i++){var m=new Mote(Math.random()*W,Math.random()*H,false);m.amax=0.08+Math.random()*0.16;motes.push(m);}}
+  function bloom(x,y){var n=reduce?10:30;for(var i=0;i<n;i++)motes.push(new Mote(x,y,true));
+    if(motes.length>200)motes.splice(0,motes.length-200);}
+  function loop(){ctx.clearRect(0,0,W,H);for(var i=motes.length-1;i>=0;i--){var m=motes[i];m.step();m.draw();
+    if(m.b&&m.amax<=0)motes.splice(i,1);}requestAnimationFrame(loop);}
+  resize();seed();
+  if(!reduce)loop();else{ctx.clearRect(0,0,W,H);motes.forEach(function(m){m.a=m.amax;m.draw();});}
+  function redraw(){ctx.clearRect(0,0,W,H);motes.forEach(function(m){m.draw();});}
+
+  /* ---------- gate + music ---------- */
+  var gate=document.getElementById("gate"),enter=document.getElementById("enter"),
+      bg=document.getElementById("bg"),audiobtn=document.getElementById("audiobtn"),fadeT=null;
+  function fadeIn(){if(fadeT)clearInterval(fadeT);var v=0;bg.volume=0;
+    fadeT=setInterval(function(){v+=0.035;if(v>=0.5){v=0.5;clearInterval(fadeT);}try{bg.volume=v;}catch(e){}},95);}
+  function enterPage(){
+    if(gate.classList.contains("gone"))return;
+    gate.classList.add("gone");audiobtn.hidden=false;
+    bloom(W/2,H*0.42);if(reduce)redraw();
+    if(bg){var p=bg.play();if(p&&p.then){p.then(fadeIn).catch(function(){
+      audiobtn.setAttribute("aria-pressed","false");audiobtn.setAttribute("aria-label","Play music");});}else fadeIn();}
+  }
+  enter.addEventListener("click",function(e){e.stopPropagation();enterPage();});
+  audiobtn.addEventListener("click",function(){
+    if(bg.paused){var p=bg.play();if(p&&p.catch)p.catch(function(){});
+      audiobtn.setAttribute("aria-pressed","true");audiobtn.setAttribute("aria-label","Pause music");}
+    else{bg.pause();audiobtn.setAttribute("aria-pressed","false");audiobtn.setAttribute("aria-label","Play music");}
+  });
+
+  /* ---------- heart: press & hold ---------- */
+  var heartBtn=document.getElementById("heartBtn"),hfill=document.getElementById("hfill"),
+      hint=document.getElementById("heartHint"),msg=document.getElementById("finaleMsg");
+  var fill=0,holding=false,done=false,raf=null,last=0,DUR=1250;
+  function setFill(f){fill=f<0?0:(f>1?1:f);var h=92*fill;hfill.setAttribute("y",92-h);hfill.setAttribute("height",h);}
+  function tick(t){
+    if(!last)last=t;var dt=t-last;last=t;
+    if(holding)setFill(fill+dt/DUR);else setFill(fill-dt/(DUR*0.7));
+    if(fill>=1&&!done){complete();return;}
+    if((holding&&fill<1)||(!holding&&fill>0)){raf=requestAnimationFrame(tick);}else{raf=null;last=0;}
+  }
+  function start(){if(done)return;holding=true;if(!raf){last=0;raf=requestAnimationFrame(tick);}}
+  function stop(){if(done)return;holding=false;if(!raf&&fill>0){last=0;raf=requestAnimationFrame(tick);}}
+  function complete(){
+    done=true;holding=false;raf=null;last=0;setFill(1);
+    hint.textContent="sent";msg.hidden=false;
+    var r=heartBtn.getBoundingClientRect();bloom(r.left+r.width/2,r.top+r.height/2);if(reduce)redraw();
+  }
+  if(reduce){heartBtn.addEventListener("click",complete);}
+  else{
+    heartBtn.addEventListener("pointerdown",function(e){e.preventDefault();start();});
+    window.addEventListener("pointerup",stop);
+    heartBtn.addEventListener("pointercancel",stop);
+    heartBtn.addEventListener("pointerleave",stop);
+  }
+  heartBtn.addEventListener("keydown",function(e){
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();if(!done){holding=true;if(!raf){last=0;raf=requestAnimationFrame(tick);}}}
+  });
+
+  /* ---------- care checklist ---------- */
+  var cards=[].slice.call(document.querySelectorAll("#careCards .rcard"));
+  var prog=document.getElementById("careProg"),doneMsg=document.getElementById("careDone");
+  function updateCare(){
+    var n=0;cards.forEach(function(c){if(c.getAttribute("aria-pressed")==="true")n++;});
+    prog.textContent=n===0?"tap each one as you do it":(n+" of "+cards.length+" done");
+    if(n===cards.length&&doneMsg.hidden){doneMsg.hidden=false;
+      var r=doneMsg.getBoundingClientRect();bloom(r.left+r.width/2,r.top+r.height/2);if(reduce)redraw();}
+    else if(n<cards.length&&!doneMsg.hidden){doneMsg.hidden=true;}
+  }
+  cards.forEach(function(c){
+    c.addEventListener("click",function(e){
+      e.stopPropagation();
+      var on=c.getAttribute("aria-pressed")==="true";
+      c.setAttribute("aria-pressed",on?"false":"true");
+      if(!on){var r=c.getBoundingClientRect();bloom(r.left+r.width/2,r.top+r.height*0.4);if(reduce)redraw();}
+      updateCare();
+    });
+  });
+
+  /* ---------- tap anywhere to sparkle ---------- */
+  document.addEventListener("click",function(e){
+    if(e.target.closest("button"))return;
+    if(!gate.classList.contains("gone"))return;
+    var x=e.clientX,y=e.clientY;if(x==null||(x===0&&y===0))return;
+    bloom(x,y);if(reduce)redraw();
+  });
+})();
+</script>
+</body>
+</html>
