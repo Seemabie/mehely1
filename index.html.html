@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mehely Express</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚙</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Nunito+Sans:opsz,wght@6..12,400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dusk:#1F2A5C;
+  --dusk-2:#2E3B7A;
+  --mazda:#2F6FE0;
+  --mazda-deep:#1C4FB0;
+  --amber:#FFB547;
+  --rose:#FF7A9C;
+  --cream:#FFF4E2;
+  --muted:rgba(255,244,226,.72);
+  --card:rgba(255,255,255,.08);
+  --line:rgba(255,244,226,.16);
+  --display:"Bricolage Grotesque", system-ui, sans-serif;
+  --body:"Nunito Sans", system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+html{background:#18214A}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(120% 70% at 50% 0%,#4A3E8C 0%,var(--dusk-2) 35%,var(--dusk) 70%,#18214A 100%)}
+body{
+  font-family:var(--body);color:var(--cream);
+  background:#18214A;
+  overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;user-select:none;-webkit-user-select:none}
+button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle 3s ease-in-out infinite}
+@keyframes twinkle{50%{opacity:.2}}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.float-txt{position:fixed;z-index:55;pointer-events:none;font-weight:800;font-family:var(--display);animation:floatUp 1.1s ease-out forwards;white-space:nowrap;transform:translate(-50%,-50%)}
+@keyframes floatUp{to{transform:translate(-50%,-140%) scale(1.15);opacity:0}}
+
+main{position:relative;z-index:1}
+.screen{display:none;min-height:100svh;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 18px 44px}
+.screen.active{display:flex;animation:enter .6s cubic-bezier(.2,.9,.25,1.15) both}
+@keyframes enter{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+.wrap{width:100%;max-width:520px}
+
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-weight:800;font-size:1rem;color:var(--amber);margin-bottom:18px}
+.brand i{font-style:normal;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--mazda);font-size:15px}
+h1,h2{font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1}
+h1{font-size:clamp(2.4rem,10vw,4.2rem)}
+h2{font-size:clamp(1.8rem,7vw,2.6rem)}
+.lede{color:var(--muted);font-size:1.05rem;line-height:1.55;max-width:34ch;margin:12px auto 0}
+.name{color:var(--amber)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:24px 20px;margin-top:22px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 28px;border-radius:999px;font-weight:800;font-size:1.05rem;transition:transform .22s cubic-bezier(.3,1.6,.5,1),background .2s,opacity .2s}
+.btn:active{transform:scale(.93)}
+.btn.go{background:var(--amber);color:#2A1D05;box-shadow:0 12px 28px -10px rgba(255,181,71,.7)}
+.btn.blue{background:var(--mazda);color:#fff;box-shadow:0 12px 28px -10px rgba(47,111,224,.8)}
+.btn.soft{background:rgba(255,255,255,.1);border:1px solid var(--line)}
+.btn[hidden]{display:none}
+.next{margin-top:24px;animation:popIn .5s cubic-bezier(.3,1.7,.5,1) both}
+@keyframes popIn{from{transform:scale(.4);opacity:0}}
+.status{min-height:1.5em;margin-top:14px;font-weight:700;color:var(--rose)}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-7px) rotate(-2deg)}40%{transform:translateX(7px) rotate(2deg)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.boing{animation:boing .45s cubic-bezier(.3,1.8,.5,1)}
+@keyframes boing{40%{transform:scale(1.18)}}
+
+/* progress */
+.route{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:18px}
+.route span{width:8px;height:8px;border-radius:50%;background:var(--line);transition:all .3s}
+.route span.on{background:var(--amber);width:22px;border-radius:6px}
+
+/* 1. shift */
+.timecard{position:relative;background:var(--cream);color:#2A2340;border-radius:20px;padding:22px 20px 20px;text-align:left;transform:rotate(-2deg);box-shadow:0 24px 40px -20px rgba(0,0,0,.6)}
+.timecard h3{font-family:var(--display);font-size:1.35rem;margin-bottom:10px}
+.tc-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #D8CDB8;font-weight:700;font-size:.95rem}
+.tc-row span:first-child{color:#6B6280;font-weight:600}
+.punch{position:absolute;right:14px;bottom:-22px;width:92px;height:92px;border-radius:50%;background:var(--rose);color:#fff;font-family:var(--display);font-weight:800;font-size:.95rem;line-height:1.05;box-shadow:0 10px 20px -8px rgba(255,122,156,.8),inset 0 -4px 0 rgba(0,0,0,.15);transform:rotate(2deg)}
+.stamp{position:absolute;left:24px;bottom:18px;padding:6px 12px;border:3px solid #2E9E6A;color:#2E9E6A;border-radius:8px;font-family:var(--display);font-weight:800;transform:rotate(-12deg) scale(3);opacity:0;transition:all .4s cubic-bezier(.3,1.6,.5,1)}
+.stamp.on{transform:rotate(-12deg) scale(1);opacity:1}
+.medal-zone{margin-top:40px;display:none}
+.medal-zone.on{display:block;animation:popIn .6s cubic-bezier(.3,1.7,.5,1)}
+.medal{font-size:84px;display:inline-block;transition:transform .8s cubic-bezier(.3,1.4,.5,1);filter:drop-shadow(0 10px 18px rgba(255,181,71,.5))}
+.proud{font-family:var(--display);font-weight:700;font-size:1.2rem;margin-top:6px;min-height:1.4em}
+
+/* 2. ride */
+.dest{display:grid;gap:10px;margin-top:18px;text-align:left}
+.dest button{display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid var(--line);font-weight:700;transition:transform .2s,background .2s}
+.dest button .ic{font-size:26px}
+.dest button small{display:block;font-weight:600;color:var(--muted);font-size:.82rem}
+.dest button.pick{background:rgba(255,181,71,.16);border-color:var(--amber)}
+.road{position:relative;height:210px;margin-top:20px;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,#2B3470 0%,#343F85 58%,#262B4F 58%,#262B4F 100%)}
+.lamps{position:absolute;left:0;right:0;top:20px;height:120px;background:
+  radial-gradient(circle at 20px 12px,rgba(255,181,71,.9) 0 5px,rgba(255,181,71,.18) 6px 38px,transparent 39px) 0 0/180px 120px repeat-x,
+  linear-gradient(90deg,transparent 18px,#4A5290 18px 22px,transparent 22px) 0 12px/180px 110px repeat-x}
+.lines{position:absolute;left:0;right:0;bottom:36px;height:4px;background:linear-gradient(90deg,var(--amber) 0 40px,transparent 40px 90px) 0 0/90px 4px repeat-x;opacity:.7}
+.road.moving .lamps{animation:scroll 2.2s linear infinite}
+.road.moving .lines{animation:scroll .7s linear infinite}
+@keyframes scroll{to{background-position-x:-180px}}
+.road.moving .lines{animation-name:scroll2}
+@keyframes scroll2{to{background-position-x:-90px}}
+.car{position:absolute;left:50%;bottom:22px;width:270px;margin-left:-135px;cursor:pointer;transition:left 1.4s cubic-bezier(.3,1,.4,1)}
+.car.away{left:-40%}
+.road.moving .car{animation:rumble .35s linear infinite}
+@keyframes rumble{50%{transform:translateY(-2px)}}
+.car .wheel{transform-box:fill-box;transform-origin:center}
+.road.moving .wheel{animation:spin .5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.car .beam{opacity:0;transition:opacity .3s}
+.car.lights .beam{opacity:.55}
+.car .crown{opacity:0;transform:translateY(-20px);transition:all .6s cubic-bezier(.3,1.7,.5,1)}
+.car.crowned .crown{opacity:1;transform:none}
+.ride-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px}
+.chip{padding:11px 16px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid var(--line);font-weight:700;font-size:.95rem;transition:transform .2s,background .2s}
+.chip.done{background:rgba(47,111,224,.35);border-color:var(--mazda)}
+.chip:active{transform:scale(.92)}
+
+/* 3. horror */
+.horror{transition:background .2s}
+.flicker{animation:flicker .6s steps(2) 2}
+@keyframes flicker{0%{filter:brightness(.25)}50%{filter:brightness(1.3)}100%{filter:brightness(.4)}}
+.driver{font-size:78px;line-height:1;transition:transform .3s}
+.meter{height:18px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:14px 0 6px;border:1px solid var(--line)}
+.meter i{display:block;height:100%;width:40%;background:linear-gradient(90deg,var(--mazda),#8E7CF0,var(--rose));border-radius:999px;transition:width .3s}
+.meter-label{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);font-weight:700}
+.story{min-height:92px;margin-top:16px;padding:16px;border-radius:18px;background:rgba(0,0,0,.25);font-size:1.02rem;line-height:1.5;text-align:left;font-style:italic}
+.story b{font-style:normal;color:var(--amber)}
+.ghost{position:fixed;z-index:50;font-size:46px;animation:haunt 2.4s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(255,255,255,.6))}
+@keyframes haunt{50%{transform:translate(12px,-14px) rotate(8deg)}}
+
+/* 4. smile */
+.battery{position:relative;width:220px;height:100px;margin:18px auto 8px;border:5px solid var(--cream);border-radius:22px;padding:6px}
+.battery::after{content:"";position:absolute;right:-16px;top:30px;width:10px;height:30px;background:var(--cream);border-radius:0 6px 6px 0}
+.battery i{display:block;height:100%;width:3%;border-radius:12px;background:linear-gradient(90deg,var(--rose),var(--amber));transition:width .1s}
+.battery b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:1.6rem;font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.hold{margin-top:18px;width:140px;height:140px;border-radius:50%;background:var(--rose);font-size:62px;display:inline-grid;place-items:center;box-shadow:0 16px 34px -10px rgba(255,122,156,.8);touch-action:none;-webkit-touch-callout:none;transition:transform .2s}
+.hold.holding{transform:scale(.92);animation:giggle .3s linear infinite}
+@keyframes giggle{50%{transform:scale(.95) rotate(7deg)}}
+
+/* 5. kitchen */
+.tawa{position:relative;width:250px;height:250px;margin:16px auto 0;border-radius:50%;background:radial-gradient(circle,#3A3A44 0 55%,#26262E 56% 70%,#1A1A20 71%);box-shadow:0 20px 40px -18px rgba(0,0,0,.8)}
+.kabab{position:absolute;width:74px;height:74px;border-radius:50%;background:#C98A6A;box-shadow:inset 0 -6px 0 rgba(0,0,0,.15);transition:background .4s,transform .45s cubic-bezier(.3,1.6,.5,1);font-size:0}
+.kabab::after{content:"";position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.2) 0 3px,transparent 4px),radial-gradient(circle at 65% 55%,rgba(60,140,60,.7) 0 3px,transparent 4px),radial-gradient(circle at 40% 70%,rgba(220,60,40,.7) 0 3px,transparent 4px)}
+.kabab.s1{background:#A9623A}
+.kabab.s2{background:#6E3A1E}
+.kabab.flip{transform:rotateY(180deg) scale(1.08)}
+.k1{left:36px;top:36px}.k2{right:36px;top:36px}.k3{left:36px;bottom:36px}.k4{right:36px;bottom:36px}
+.sizzle{position:absolute;inset:0;pointer-events:none}
+.plate{position:relative;width:230px;height:130px;margin:20px auto 0;cursor:pointer}
+.plate .dish{position:absolute;inset:auto 0 0 0;height:60px;border-radius:50%;background:radial-gradient(ellipse,#FFFDF7 0 55%,#E9E1D0 56% 100%);box-shadow:0 14px 24px -12px rgba(0,0,0,.7)}
+.plate .rice{position:absolute;left:50%;bottom:26px;width:130px;height:0;margin-left:-65px;border-radius:50% 50% 12px 12px;background:radial-gradient(circle at 30% 40%,#fff 0 2px,transparent 3px) 0 0/10px 8px,#FBF3DE;transition:height .45s cubic-bezier(.3,1.6,.5,1)}
+.plate .kb{position:absolute;bottom:36px;font-size:0;width:44px;height:44px;border-radius:50%;background:#6E3A1E;opacity:0;transition:all .5s cubic-bezier(.3,1.6,.5,1)}
+.plate.served .kb{opacity:1}
+.plate .kb.a{left:34px}.plate .kb.b{right:34px}
+.toppings{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+.multiplier{font-family:var(--display);font-weight:800;font-size:3rem;color:var(--amber);margin-top:10px}
+
+/* 6. bite */
+.bite-emoji{font-size:90px;display:inline-block;animation:wob 1.8s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(-8deg) scale(1.05)}}
+.bite-actions{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:22px}
+
+/* 7. end */
+.rate{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.rate button{font-size:38px;filter:grayscale(1) opacity(.5);transition:transform .3s cubic-bezier(.3,1.8,.5,1),filter .3s}
+.rate button.on{filter:none;transform:scale(1.15)}
+.receipt{background:var(--cream);color:#2A2340;border-radius:18px;padding:20px;text-align:left;margin-top:18px}
+.receipt .r{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed #D8CDB8;font-size:.95rem}
+.receipt .r b{white-space:nowrap}
+.receipt .r.t{border:0;font-family:var(--display);font-weight:800;font-size:1.15rem;padding-top:12px}
+.note{margin-top:20px;padding:22px 20px;border-radius:22px;background:linear-gradient(135deg,rgba(47,111,224,.35),rgba(255,122,156,.28));border:1px solid var(--line);font-size:1.08rem;line-height:1.6;text-align:left;display:none}
+.note.on{display:block;animation:popIn .6s both}
+.note p+p{margin-top:10px}
+.sign{font-family:var(--display);font-weight:800;color:var(--amber);margin-top:12px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="stars" id="stars" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<main>
+<!-- 1. Clock out -->
+<section class="screen active" id="s1">
+  <div class="wrap">
+    <div class="brand"><i>🚙</i> Mehely Express</div>
+    <div class="route" data-step="1"></div>
+    <h1>Shift's over, <span class="name">Mehely</span></h1>
+    <p class="lede">You worked so hard today. Punch out and let someone else do the driving.</p>
+    <div class="card" style="padding-bottom:34px">
+      <div class="timecard" id="timecard">
+        <h3>Mehely's time card</h3>
+        <div class="tc-row"><span>Employee</span><span>Mehely</span></div>
+        <div class="tc-row"><span>Effort today</span><span>way too much</span></div>
+        <div class="tc-row"><span>Complaints</span><span>0 (legend)</span></div>
+        <div class="tc-row"><span>Ride waiting outside</span><span>yes 🚙</span></div>
+        <div class="stamp" id="stamp">CLOCKED OUT</div>
+        <button class="punch" id="punch">Tap to<br>punch out<br><span id="punchCount">(3 taps)</span></button>
+      </div>
+      <div class="medal-zone" id="medalZone">
+        <button class="medal" id="medal" aria-label="Spin the medal">🏅</button>
+        <p class="proud" id="proud">Tap your medal, Mehely</p>
+      </div>
+    </div>
+    <button class="btn go next" id="n1" data-go="s2" hidden>Find my ride</button>
+  </div>
+</section>
+
+<!-- 2. Ride -->
+<section class="screen" id="s2">
+  <div class="wrap">
+    <div class="brand"><i>🚙</i> Mehely Express</div>
+    <div class="route" data-step="2"></div>
+    <h2>Where to, <span class="name">Mehely</span>?</h2>
+    <div class="dest" id="dest">
+      <button data-d="kabab"><span class="ic">🍖</span><span>Chapli Kabab with Rice<small>Tonight's special. Hot, crispy, perfect.</small></span></button>
+      <button data-d="home"><span class="ic">🏠</span><span>Straight home<small>Boring option</small></span></button>
+      <button data-d="salad"><span class="ic">🥗</span><span>Just a salad<small>Are you sure?</small></span></button>
+    </div>
+    <p class="status" id="destMsg" aria-live="polite"></p>
+    <div id="rideZone" hidden>
+      <div class="road" id="road">
+        <div class="lamps"></div><div class="lines"></div>
+        <svg class="car" id="car" viewBox="0 0 300 130" role="button" aria-label="Tap the blue Mazda to honk">
+          <polygon class="beam" points="286,72 300,52 300,100" fill="#FFE3A8"/>
+          <path d="M18 92 Q14 72 38 67 L92 60 Q118 30 152 28 L196 28 Q228 30 248 58 L274 64 Q292 68 288 92 Z" fill="#2F6FE0"/>
+          <path d="M18 92 L288 92 L286 84 L20 84 Z" fill="#1C4FB0"/>
+          <path d="M104 60 Q124 38 152 36 L166 36 L166 60 Z" fill="#BFE0FF" opacity=".85"/>
+          <path d="M173 36 L194 36 Q218 38 236 58 L173 60 Z" fill="#BFE0FF" opacity=".85"/>
+          <text x="198" y="56" font-size="18">🙂</text>
+          <text x="126" y="56" font-size="18">😄</text>
+          <text class="crown" x="196" y="30" font-size="22">👑</text>
+          <ellipse cx="282" cy="74" rx="6" ry="5" fill="#FFB547"/>
+          <rect x="22" y="72" width="10" height="6" rx="2" fill="#FF5A6E"/>
+          <text x="126" y="80" font-size="10" fill="#fff" font-weight="800" font-family="sans-serif">MAZDA</text>
+          <g class="wheel"><circle cx="78" cy="94" r="21" fill="#1B1E2E"/><circle cx="78" cy="94" r="10" fill="#C8CCDA"/><rect x="76" y="76" width="4" height="36" fill="#1B1E2E"/></g>
+          <g class="wheel"><circle cx="234" cy="94" r="21" fill="#1B1E2E"/><circle cx="234" cy="94" r="10" fill="#C8CCDA"/><rect x="232" y="76" width="4" height="36" fill="#1B1E2E"/></g>
+        </svg>
+      </div>
+      <p class="lede" style="font-size:.95rem">Your driver has arrived in a blue Mazda. Get the car ready:</p>
+      <div class="ride-controls">
+        <button class="chip" id="cHonk">📯 Honk (0/3)</button>
+        <button class="chip" id="cLights">💡 Headlights</button>
+        <button class="chip" id="cCrown">👑 Crown the passenger princess</button>
+        <button class="chip" id="cBelt">🔒 Seatbelt</button>
+      </div>
+      <p class="status" id="rideMsg" aria-live="polite"></p>
+    </div>
+    <button class="btn blue next" id="n2" hidden>Start driving</button>
+  </div>
+</section>
+
+<!-- 3. Horror -->
+<section class="screen horror" id="s3">
+  <div class="wrap">
+    <div class="brand"><i>🚙</i> Mehely Express</div>
+    <div class="route" data-step="3"></div>
+    <h2>Uh oh. The driver is getting sleepy</h2>
+    <p class="lede">Only one thing keeps him awake: <span class="name">Mehely</span>'s horror stories. Keep the sleep meter down.</p>
+    <div class="card">
+      <div class="driver" id="driverFace">😪</div>
+      <div class="meter"><i id="sleepBar"></i></div>
+      <div class="meter-label"><span>wide awake</span><span id="sleepPct">40% sleepy</span></div>
+      <div class="story" id="story">Tap the button, Mehely. Scare him awake.</div>
+      <div style="margin-top:16px"><button class="btn go" id="tell">👻 Tell a horror story (0/4)</button></div>
+      <p class="status" id="horrorMsg" aria-live="polite"></p>
+    </div>
+    <button class="btn blue next" id="n3" data-go="s4" hidden>Keep driving</button>
+  </div>
+</section>
+
+<!-- 4. Smile -->
+<section class="screen" id="s4">
+  <div class="wrap">
+    <div class="brand"><i>🚙</i> Mehely Express</div>
+    <div class="route" data-step="4"></div>
+    <h2>Driver battery is low</h2>
+    <p class="lede">A whole day of work. He's exhausted. There is exactly one charger that works on him: <span class="name">Mehely</span>'s smile.</p>
+    <div class="battery"><i id="batt"></i><b id="battTxt">3%</b></div>
+    <button class="hold" id="hold" aria-label="Hold to charge with your smile">🙂</button>
+    <p style="margin-top:12px;font-weight:800" id="holdLabel">Hold and smile, Mehely</p>
+    <p class="status" id="holdMsg" aria-live="polite"></p>
+    <button class="btn go next" id="n4" data-go="s5" hidden>We're here! Food time</button>
+  </div>
+</section>
+
+<!-- 5. Kitchen -->
+<section class="screen" id="s5">
+  <div class="wrap">
+    <div class="brand"><i>🚙</i> Mehely Express</div>
+    <div class="route" data-step="5"></div>
+    <h2>Chapli Kabab time</h2>
+    <p class="lede" id="kitchenLede">Chef <span class="name">Mehely</span>, tap each kabab to flip it until it's perfectly crispy.</p>
+    <div class="tawa" id="tawa">
+      <button class="kabab k1" aria-label="Kabab 1">kabab</button>
+      <button class="kabab k2" aria-label="Kabab 2">kabab</button>
+      <button class="kabab k3" aria-label="Kabab 3">kabab</button>
+      <button class="kabab k4" aria-label="Kabab 4">kabab</button>
+    </div>
+    <div id="plateZone" hidden>
+      <p class="lede">Now tap the plate to scoop the rice. Big scoops, Mehely.</p>
+      <div class="plate" id="plate" role="button" tabindex="0" aria-label="Scoop rice">
+        <div class="dish"></div><div class="rice" id="rice"></div><div class="kb a"></div><div class="kb b"></div>
+      </div>
+    </div>
+    <div id="topZone" hidden>
+      <p class="lede">Pick your extras (tap at least two):</p>
+      <div class="toppings" id="toppings">
+        <button class="chip">🌿 Green chutney</button>
+        <button class="chip">🥛 Raita</button>
+        <button class="chip">🧅 Onions</button>
+        <button class="chip">🍋 Lemon</button>
+        <button class="chip">🍅 Salad</button>
+        <button class="chip">🫓 Naan too</button>
+      </div>
+      <div id="multi" hidden>
+        <p class="lede">Taste level when eating with Mehely:</p>
+        <div class="multiplier" id="multiNum">x1</div>
+      </div>
+    </div>
+    <p class="status" id="kitchenMsg" aria-live="polite"></p>
+    <button class="btn go next" id="n5" data-go="s6" hidden>Dig in</button>
+  </div>
+</section>
+
+<!-- 6. Bite -->
+<section class="screen" id="s6">
+  <div class="wrap">
+    <div class="brand"><i>🚙</i> Mehely Express</div>
+    <div class="route" data-step="6"></div>
+    <div class="bite-emoji" id="biteEmoji">🥺</div>
+    <h2>The driver is staring at your plate</h2>
+    <p class="lede">He drove the whole way, <span class="name">Mehely</span>. He stayed awake. He's asking for one bite.</p>
+    <div class="bite-actions">
+      <button class="btn go" id="feed">🍽️ Feed him one bite</button>
+      <button class="btn soft" id="keep">Keep it all for me</button>
+    </div>
+    <p class="status" id="biteMsg" aria-live="polite"></p>
+    <button class="btn blue next" id="n6" data-go="s7" hidden>End the ride</button>
+  </div>
+</section>
+
+<!-- 7. End -->
+<section class="screen" id="s7">
+  <div class="wrap">
+    <div class="brand"><i>🚙</i> Mehely Express</div>
+    <div class="route" data-step="7"></div>
+    <h2>You've arrived, <span class="name">Mehely</span></h2>
+    <p class="lede">Please rate your driver.</p>
+    <div class="rate" id="rate">
+      <button aria-label="1 star">⭐</button><button aria-label="2 stars">⭐</button><button aria-label="3 stars">⭐</button><button aria-label="4 stars">⭐</button><button aria-label="5 stars">⭐</button>
+    </div>
+    <p class="status" id="rateMsg" aria-live="polite"></p>
+    <div class="receipt" id="receipt" hidden>
+      <div class="r"><span>Pickup from work</span><b>Mehely</b></div>
+      <div class="r"><span>Vehicle</span><b>Blue Mazda 🚙</b></div>
+      <div class="r"><span>Horror stories told</span><b>4 (driver alive)</b></div>
+      <div class="r"><span>Chapli Kabab with Rice</span><b>on me</b></div>
+      <div class="r"><span>Driver tiredness removed</span><b>100%</b></div>
+      <div class="r t"><span>Fare paid</span><span>1 smile + 1 bite</span></div>
+    </div>
+    <button class="btn go next" id="openNote" hidden>💌 A note from your driver</button>
+    <div class="note" id="note">
+      <p><b class="name">Mehely</b>, picking you up from work is my favorite part of the day. I could be tired, stressed, done with everything, and then you walk out, get in the car, and smile. That's it. The whole day is gone.</p>
+      <p>I'm so proud of how hard you work. Thank you for being my passenger princess, for the horror stories that keep me awake, and for making every single bite taste better just because you're next to me.</p>
+      <p>Same time tomorrow? Your ride will be outside. It's the blue one. 💙</p>
+      <p class="sign">Your driver, Seemab</p>
+    </div>
+    <div style="margin-top:22px"><button class="btn soft" id="again" hidden>🔁 Book tomorrow's ride</button></div>
+  </div>
+</section>
+</main>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a,b) => a + Math.random()*(b-a);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const reveal = el => { el.hidden = false; };
+function pulse(el, cls='boing'){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+
+/* stars */
+for (let i=0;i<60;i++){ const s=document.createElement('span'); s.className='star'; s.style.left=rand(0,100)+'%'; s.style.top=rand(0,60)+'%'; s.style.animationDelay=(-rand(0,3))+'s'; s.style.opacity=rand(.3,1); $('#stars').appendChild(s); }
+
+/* route dots */
+$$('.route').forEach(r => { const n=+r.dataset.step; for(let i=1;i<=7;i++){ const d=document.createElement('span'); if(i<=n) d.className='on'; r.appendChild(d);} });
+
+/* confetti */
+const cv=$('#fx'), ctx=cv.getContext('2d'); let parts=[], anim=false; const dpr=Math.min(devicePixelRatio||1,2);
+function resize(){ cv.width=innerWidth*dpr; cv.height=innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); } resize(); addEventListener('resize',resize);
+const COLORS=['#FFB547','#FF7A9C','#2F6FE0','#8E7CF0','#FFF4E2','#6FD1A6'];
+function burst(x,y,n=100,sp=12,glyphs=null){
+  if(reduce) return;
+  for(let i=0;i<n;i++) parts.push({x,y,vx:rand(-sp,sp),vy:rand(-sp*1.1,-2),g:.32,r:rand(0,360),vr:rand(-10,10),w:rand(6,10),h:rand(8,14),c:COLORS[i%COLORS.length],gl:glyphs?glyphs[i%glyphs.length]:(Math.random()<.3?'♥':null),life:0});
+  if(!anim){anim=true;requestAnimationFrame(tick);}
+}
+function burstAt(el,n,sp,gl){ const r=el.getBoundingClientRect(); burst(r.left+r.width/2, r.top+r.height/2, n, sp, gl); }
+function tick(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.y<innerHeight+40&&p.life<500);
+  for(const p of parts){ p.life++; p.vx*=.985; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r*Math.PI/180); ctx.fillStyle=p.c;
+    if(p.gl){ ctx.font=`${p.w*2.4}px serif`; ctx.textAlign='center'; ctx.fillText(p.gl,0,0);} else ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    ctx.restore(); }
+  if(parts.length) requestAnimationFrame(tick); else {anim=false; ctx.clearRect(0,0,innerWidth,innerHeight);}
+}
+function say(text, x, y, color='#FFB547'){
+  const s=document.createElement('span'); s.className='float-txt'; s.textContent=text; s.style.left=x+'px'; s.style.top=y+'px'; s.style.color=color;
+  document.body.appendChild(s); setTimeout(()=>s.remove(),1100);
+}
+function sayAt(el,text,color){ const r=el.getBoundingClientRect(); say(text, r.left+r.width/2, r.top, color); }
+
+/* heart trail */
+let lt=0; addEventListener('pointermove',e=>{ if(reduce) return; const n=performance.now(); if(n-lt<80) return; lt=n; say('♥', e.clientX, e.clientY, 'rgba(255,122,156,.8)'); },{passive:true});
+
+/* nav */
+function show(id){ $$('.screen').forEach(s=>s.classList.remove('active')); $('#'+id).classList.add('active'); scrollTo(0,0); if(id==='s3') startSleep(); }
+document.addEventListener('click',e=>{ const g=e.target.closest('[data-go]'); if(g&&!g.hidden) show(g.dataset.go); });
+
+/* ---------- 1. punch out ---------- */
+let punches=0;
+$('#punch').addEventListener('click',()=>{
+  if(punches>=3) return;
+  punches++; pulse($('#timecard'),'shake');
+  const lines=['Punch!','Harder!','CLOCKED OUT!'];
+  sayAt($('#punch'), lines[punches-1], '#FF7A9C');
+  $('#punchCount').textContent = punches<3 ? `(${3-punches} more)` : '✓';
+  if(punches===3){ $('#stamp').classList.add('on'); burstAt($('#timecard'),120,13); $('#medalZone').classList.add('on'); }
+});
+let spins=0;
+const PROUD=['Hardest worker award goes to Mehely','Seemab is SO proud of you, Mehely','Certified: works too hard, deserves kababs','Mehely, employee of forever'];
+$('#medal').addEventListener('click',()=>{
+  spins++; $('#medal').style.transform=`rotateY(${spins*360}deg) scale(1.1)`;
+  $('#proud').textContent=PROUD[(spins-1)%PROUD.length];
+  burstAt($('#medal'),40,8,['⭐','✨','♥']);
+  if(spins>=2) reveal($('#n1'));
+});
+
+/* ---------- 2. destination + car ---------- */
+const DEST_MSG={
+  home:['Home? Without kabab? The Mazda refuses.','Sorry Mehely, the GPS only knows one address tonight.'],
+  salad:['A salad?? On chapli kabab night??','The driver is pretending he did not hear that.']
+};
+let dCount={home:0,salad:0};
+$('#dest').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  const d=b.dataset.d;
+  if(d!=='kabab'){ pulse(b,'shake'); $('#destMsg').textContent=DEST_MSG[d][dCount[d]++%2]; return; }
+  $$('#dest button').forEach(x=>x.classList.remove('pick')); b.classList.add('pick');
+  $('#destMsg').textContent='Excellent choice, Mehely. Your blue Mazda is on the way.';
+  burstAt(b,50,9,['🍖','🍚','♥']);
+  reveal($('#rideZone'));
+  setTimeout(()=>$('#rideZone').scrollIntoView({behavior:'smooth',block:'center'}),150);
+});
+const ride={honk:0,lights:false,crown:false,belt:false};
+const car=$('#car');
+function honk(src){
+  ride.honk++; pulse(car,'boing');
+  const words=['BEEP BEEP 📯','Mehely!! 💙','Your ride is here!','HONK for the princess','beep (lovingly)'];
+  sayAt(car, words[(ride.honk-1)%words.length], '#FFB547');
+  $('#cHonk').textContent=`📯 Honk (${Math.min(ride.honk,3)}/3)`;
+  if(ride.honk>=3) $('#cHonk').classList.add('done');
+  checkRide();
+}
+car.addEventListener('click',honk);
+$('#cHonk').addEventListener('click',honk);
+$('#cLights').addEventListener('click',()=>{
+  ride.lights=!ride.lights; car.classList.toggle('lights',ride.lights); $('#cLights').classList.toggle('done',ride.lights);
+  $('#rideMsg').textContent = ride.lights ? 'Headlights on. Now the whole street can see how pretty you are.' : 'Lights off? Mehely, safety first!';
+  checkRide();
+});
+$('#cCrown').addEventListener('click',()=>{
+  if(ride.crown){ $('#rideMsg').textContent='Already crowned. Royalty is permanent, Mehely.'; pulse($('#cCrown'),'shake'); return; }
+  ride.crown=true; car.classList.add('crowned'); $('#cCrown').classList.add('done');
+  $('#cCrown').textContent='👑 Passenger princess: Mehely';
+  $('#rideMsg').textContent='Passenger princess has been seated. Driver will now obey all snack requests.';
+  burstAt(car,60,10,['👑','✨','♥']);
+  checkRide();
+});
+$('#cBelt').addEventListener('click',()=>{
+  if(ride.belt) return;
+  ride.belt=true; $('#cBelt').classList.add('done'); $('#cBelt').textContent='🔒 Click! Buckled';
+  $('#rideMsg').textContent='Precious cargo secured.';
+  checkRide();
+});
+function checkRide(){ if(ride.honk>=3&&ride.lights&&ride.crown&&ride.belt) reveal($('#n2')); }
+$('#n2').addEventListener('click',()=>{
+  $('#road').classList.add('moving');
+  $('#rideMsg').textContent='Vroom. Driving Mehely to kabab heaven…';
+  $('#n2').hidden=true;
+  setTimeout(()=>show('s3'),2200);
+});
+
+/* ---------- 3. horror stories ---------- */
+const STORIES=[
+  '<b>Mehely whispers:</b> "You know that empty parking lot on the way? People say headlights turn on there at night. From cars that aren\'t there."',
+  '<b>Mehely:</b> "A guy picked up a lady at a gas station. She said thank you and got in the back. When he turned around, the back seat was wet. And empty."',
+  '<b>Mehely, very calmly:</b> "Never check the rearview mirror at 2:14 AM. Not because something is behind you. Because it\'ll wave."',
+  '<b>Mehely:</b> "The GPS said turn left. There was no road there. So it said it again. Louder. In his mom\'s voice."'
+];
+const REACTIONS=['AWAKE. VERY AWAKE.','Why would you say that 😭','Checking mirrors…','Okay I\'m never sleeping again'];
+let sleep=40, told=0, sleepTimer=null, ghostsLeft=0;
+function setSleep(v){
+  sleep=clamp(v,0,100);
+  $('#sleepBar').style.width=sleep+'%';
+  $('#sleepPct').textContent=Math.round(sleep)+'% sleepy';
+  $('#driverFace').textContent = sleep>70?'😴': sleep>40?'😪': sleep>15?'😐':'😳';
+}
+function startSleep(){
+  if(sleepTimer||told>=4) return;
+  setSleep(sleep);
+  sleepTimer=setInterval(()=>{
+    setSleep(sleep+1.2);
+    if(sleep>=95) $('#horrorMsg').textContent='Mehely!! He\'s nodding off! Tell a story, quick!';
+  },200);
+}
+$('#tell').addEventListener('click',()=>{
+  if(told>=4) return;
+  const s3=$('#s3'); pulse(s3,'flicker');
+  $('#story').innerHTML=STORIES[told];
+  told++;
+  setSleep(sleep-40);
+  pulse($('#driverFace'),'shake');
+  sayAt($('#driverFace'), REACTIONS[told-1], '#FF7A9C');
+  $('#tell').textContent = told<4 ? `👻 Tell a horror story (${told}/4)` : '👻 Stories complete';
+  if(told===4){ clearInterval(sleepTimer); sleepTimer=null; setSleep(0); spawnGhosts(); }
+});
+function spawnGhosts(){
+  ghostsLeft=5;
+  $('#horrorMsg').textContent='Oh no. The stories summoned ghosts into the Mazda. Tap them away, Mehely!';
+  for(let i=0;i<5;i++){
+    const g=document.createElement('button'); g.className='ghost'; g.textContent='👻'; g.setAttribute('aria-label','Shoo ghost');
+    g.style.left=rand(8,80)+'vw'; g.style.top=rand(15,75)+'vh'; g.style.animationDelay=(-rand(0,2))+'s';
+    g.addEventListener('click',()=>{
+      const r=g.getBoundingClientRect(); burst(r.left+20,r.top+20,20,6,['✨']);
+      say(['boo!','shoo!','bye ghost','not in my Mazda','Mehely wins'][5-ghostsLeft], r.left+20, r.top, '#FFF4E2');
+      g.remove(); ghostsLeft--;
+      if(ghostsLeft===0){ $('#horrorMsg').textContent='All ghosts gone. Mehely is brave AND cute. Driver fully awake.'; reveal($('#n3')); }
+      else $('#horrorMsg').textContent=`${ghostsLeft} ghost${ghostsLeft>1?'s':''} left…`;
+    });
+    document.body.appendChild(g);
+  }
+}
+
+/* ---------- 4. smile charger ---------- */
+const hold=$('#hold'); let prog=.03, holding=false, raf=null, charged=false, lastT=0;
+const FACES=['🙂','😊','😄','😁','🥰'];
+const CHARGE_MSG=['Charging…','Tiredness leaving the body…','Is that a dimple? Charging faster','Almost there, keep smiling','Overcharged with happiness'];
+function loop(ts){
+  const dt=lastT?Math.min((ts-lastT)/1000,.1):0; lastT=ts;
+  prog=clamp(prog+(holding?dt*.42:-dt*.2),.03,1);
+  $('#batt').style.width=(prog*100)+'%'; $('#battTxt').textContent=Math.round(prog*100)+'%';
+  hold.textContent=FACES[Math.min(4,Math.floor(prog*5))];
+  if(holding) $('#holdMsg').textContent=CHARGE_MSG[Math.min(4,Math.floor(prog*5))];
+  if(prog>=1){ charged=true; holding=false; hold.classList.remove('holding'); raf=null;
+    $('#holdLabel').textContent='Driver fully recharged ⚡'; $('#holdMsg').textContent='See? One smile from Mehely and the whole day\'s tiredness is gone.';
+    burstAt(hold,160,14,['⚡','♥','😊']); reveal($('#n4')); return; }
+  raf = (holding||prog>.03) ? requestAnimationFrame(loop) : null;
+  if(!raf) lastT=0;
+}
+function startHold(e){ if(charged) return; if(e) e.preventDefault(); holding=true; hold.classList.add('holding'); if(!raf){ lastT=0; raf=requestAnimationFrame(loop);} }
+function endHold(){ if(charged||!holding) return; holding=false; hold.classList.remove('holding'); if(prog>.05) $('#holdMsg').textContent='Battery draining! Smile again, Mehely!'; }
+hold.addEventListener('pointerdown',startHold); addEventListener('pointerup',endHold); addEventListener('pointercancel',endHold);
+hold.addEventListener('contextmenu',e=>e.preventDefault());
+hold.addEventListener('keydown',e=>{ if((e.key===' '||e.key==='Enter')&&!e.repeat) startHold(e); });
+hold.addEventListener('keyup',e=>{ if(e.key===' '||e.key==='Enter') endHold(); });
+
+/* ---------- 5. kitchen ---------- */
+const kState=new Map(); let doneK=0;
+const KMSG=['Sizzle sizzle 🔥','Flip!','Crispy edges loading','Chef Mehely is cooking'];
+$$('.kabab').forEach(k=>{
+  kState.set(k,0);
+  k.addEventListener('click',()=>{
+    let s=kState.get(k); if(s>=2){ sayAt(k,'already perfect','#6FD1A6'); return; }
+    s++; kState.set(k,s); k.classList.remove('s1','s2'); k.classList.add('s'+s);
+    k.classList.toggle('flip');
+    sayAt(k, s===2?'Perfect! ✨':KMSG[Math.floor(rand(0,4))], s===2?'#6FD1A6':'#FFB547');
+    const r=k.getBoundingClientRect(); burst(r.left+37,r.top+20,10,4,['🔥','💨']);
+    if(s===2){ doneK++; if(doneK===4){ $('#kitchenMsg').textContent='All four kababs: perfectly crispy. Gordon Ramsay could never, Mehely.'; reveal($('#plateZone')); setTimeout(()=>$('#plateZone').scrollIntoView({behavior:'smooth',block:'center'}),150);} }
+  });
+});
+let scoops=0;
+function scoop(){
+  if(scoops>=4) return;
+  scoops++; $('#rice').style.height=(scoops*17)+'px'; pulse($('#plate'));
+  sayAt($('#plate'), ['one scoop','two scoops','three!!','Mehely portion ✓'][scoops-1], '#FFF4E2');
+  if(scoops===4){ $('#plate').classList.add('served'); $('#kitchenMsg').textContent='Kababs on the rice. It looks so good.'; reveal($('#topZone')); setTimeout(()=>$('#topZone').scrollIntoView({behavior:'smooth',block:'center'}),150); }
+}
+$('#plate').addEventListener('click',scoop);
+$('#plate').addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); scoop(); }});
+let tops=0, multiDone=false;
+$$('#toppings .chip').forEach(c=>c.addEventListener('click',()=>{
+  const on=!c.classList.contains('done'); c.classList.toggle('done',on); tops+=on?1:-1;
+  if(on) sayAt(c,'yum','#6FD1A6');
+  if(tops>=2&&!multiDone){ multiDone=true; reveal($('#multi')); runMulti(); }
+}));
+function runMulti(){
+  const el=$('#multiNum'); let v=1;
+  const steps=[1,2,5,10,25,50,100];
+  let i=0; const t=setInterval(()=>{ v=steps[i++]; el.textContent='x'+v; pulse(el);
+    if(i>=steps.length){ clearInterval(t); el.textContent='x100'; $('#kitchenMsg').textContent='Food tastes 100 times better because Mehely is eating it with me.'; burstAt(el,120,13,['🍖','🍚','♥']); reveal($('#n5')); } },260);
+}
+
+/* ---------- 6. bite ---------- */
+const KEEP=['Mehely… please 🥺','Just one tiny bite?','He stayed awake for you!','He survived the ghost stories!','Okay fine, one bite 💙'];
+let keeps=0, fed=false;
+$('#keep').addEventListener('click',()=>{
+  if(fed) return;
+  if(keeps<KEEP.length-1){ $('#keep').textContent=KEEP[keeps]; pulse($('#keep'),'shake'); $('#biteEmoji').textContent=['😢','🥹','😭','🫠'][keeps]; keeps++; $('#feed').style.transform=`scale(${1+keeps*.1})`; $('#biteMsg').textContent='The driver is not giving up.'; }
+  else feed();
+});
+$('#feed').addEventListener('click',feed);
+function feed(){
+  if(fed) return; fed=true;
+  $('#biteEmoji').textContent='😋';
+  $('#biteMsg').textContent='Best bite of his life. Because Mehely shared it.';
+  $('#keep').hidden=true; $('#feed').textContent='✓ Bite shared'; $('#feed').style.transform='';
+  burstAt($('#biteEmoji'),140,13,['🍖','♥','😋']);
+  reveal($('#n6'));
+}
+
+/* ---------- 7. rating + note ---------- */
+const RATE=['1 star? The system has upgraded this to 5.','2 stars? Mehely, he honked for you. 5 stars applied.','3 stars? Auto-corrected to 5. You\'re welcome.','4 stars? So close. Rounded up to 5.','5 stars. Correct answer, Mehely.'];
+let rated=false;
+$$('#rate button').forEach((b,i)=>b.addEventListener('click',()=>{
+  $$('#rate button').forEach((x,j)=>{ x.classList.toggle('on', j<=i); });
+  $('#rateMsg').textContent=RATE[i];
+  setTimeout(()=>{ $$('#rate button').forEach((x,j)=>setTimeout(()=>x.classList.add('on'),j*90)); },400);
+  if(!rated){ rated=true; setTimeout(()=>{ reveal($('#receipt')); reveal($('#openNote')); burstAt($('#rate'),80,10,['⭐']); },900); }
+}));
+$('#openNote').addEventListener('click',()=>{
+  $('#note').classList.add('on'); $('#openNote').hidden=true; reveal($('#again'));
+  burst(innerWidth/2, innerHeight*.4, 180, 15, ['💙','♥','🚙','✨']);
+  setTimeout(()=>$('#note').scrollIntoView({behavior:'smooth',block:'center'}),150);
+});
+$('#again').addEventListener('click',()=>location.reload());
+})();
+</script>
+</body>
+</html>
